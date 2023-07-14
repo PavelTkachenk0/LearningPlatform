@@ -1,5 +1,4 @@
-﻿using LearningPlatform.DAL.Models;
-using LearningPlatform.Service.Models;
+﻿using LearningPlatform.Service.Models;
 
 namespace LearningPlatform.Service.Interfaces;
 

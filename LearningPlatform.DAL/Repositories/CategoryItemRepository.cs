@@ -1,11 +1,6 @@
 ﻿using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LearningPlatform.DAL.Repositories;
 
@@ -65,11 +60,11 @@ public class CategoryItemRepository : ICategoryItemRepository
         return await _dbContext.CategoryItem.FirstOrDefaultAsync(x => x.Title == title);
     }
 
-    public async Task<CategoryItem> Update(CategoryItem entity)
+    public async Task<bool> Update(CategoryItem entity)
     {
         _dbContext.CategoryItem.Update(entity);
         await _dbContext.SaveChangesAsync();
 
-        return entity;
+        return true;
     }
 }

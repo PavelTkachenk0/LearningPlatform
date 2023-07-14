@@ -1,9 +1,8 @@
-﻿//using LearningPlatform.DAL.Models;
-//using LearningPlatform.Service.Models;
+﻿using LearningPlatform.Service.Models;
 
-//namespace LearningPlatform.Service.Interfaces;
+namespace LearningPlatform.Service.Interfaces;
 
-//public interface ICategoryItemService : IBaseService<CategoryItem, CategoryItemViewModelDTO>
-//{
-//    Task<IBaseResponse<CategoryItem>> GetByDescription(string description);
-//}
+public interface ICategoryItemService : IBaseService<CategoryItemDTO, CategoryItemViewModelDTO>
+{
+    Task<IBaseResponse<CategoryItemViewModelDTO>> GetByDescription(string description);
+}

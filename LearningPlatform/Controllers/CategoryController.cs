@@ -54,4 +54,20 @@ public class CategoryController : Controller
         var response = await _categoryService.GetById(Id);
         return response.Data;
     }
+
+    [HttpGet("GetByTitle")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<CategoryViewModelDTO> GetByTitle(string title)
+    {
+        var response = await _categoryService.GetByTitle(title);
+        return response.Data;
+    }
+
+    [HttpPut("ChangeCategory")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ChangeCategory(int id, [FromBody] CategoryViewModelDTO categoryViewModelDTO)
+    {
+        var response = await _categoryService.Update(id, categoryViewModelDTO);
+        return Ok();
+    }
 }

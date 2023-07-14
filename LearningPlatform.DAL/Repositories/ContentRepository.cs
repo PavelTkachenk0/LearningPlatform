@@ -1,11 +1,6 @@
 ﻿using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LearningPlatform.DAL.Repositories;
 
@@ -60,10 +55,10 @@ public class ContentRepository : IBaseRepository<Content>
         return await _dbContext.Content.FirstOrDefaultAsync(x => x.Title == title);
     }
 
-    public async Task<Content> Update(Content entity)
+    public async Task<bool> Update(Content entity)
     {
         _dbContext.Content.Update(entity);
         await _dbContext.SaveChangesAsync();
-        return entity;
+        return true;
     }
 }

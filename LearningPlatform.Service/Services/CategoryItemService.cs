@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
+using LearningPlatform.DAL.Repositories;
 using LearningPlatform.Service.Enums;
 using LearningPlatform.Service.Interfaces;
 using LearningPlatform.Service.Models;
@@ -8,29 +9,29 @@ using LearningPlatform.Service.Response;
 
 namespace LearningPlatform.Service.Services;
 
-public class CategoryService : ICategoryService
+public class CategoryItemService : ICategoryItemService
 {
-    private readonly ICategoryRepository _categoryRepository;
+    private readonly ICategoryItemRepository _categoryItemRepository;
     private readonly IMapper _mapper;
 
-    public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+    public CategoryItemService(IMapper mapper, ICategoryItemRepository categoryItemRepository)
     {
-        _categoryRepository = categoryRepository;
         _mapper = mapper;
+        _categoryItemRepository = categoryItemRepository;
     }
-    public async Task<IBaseResponse<CategoryDTO>> Create(CategoryViewModelDTO entity)
+    public async Task<IBaseResponse<CategoryItemDTO>> Create(CategoryItemViewModelDTO entity)
     {
-        var baseResponse = new BaseResponse<CategoryDTO>();
+        var baseResponse = new BaseResponse<CategoryItemDTO>();
         try
         {
-            var item = _mapper.Map<Category>(entity);
-            await _categoryRepository.Create(item);
+            var item = _mapper.Map<CategoryItem>(entity);
+            await _categoryItemRepository.Create(item);
         }
         catch (Exception ex)
         {
-            return new BaseResponse<CategoryDTO>()
+            return new BaseResponse<CategoryItemDTO>()
             {
-                Description = $"[CreateCategory] : {ex.Message}",
+                Description = $"[CreateCategoryItem] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
@@ -42,37 +43,37 @@ public class CategoryService : ICategoryService
         var baseResponse = new BaseResponse<bool>();
         try
         {
-            var category = await _categoryRepository.GetById(id);
-            if(category == null)
+            var categoryItem = await _categoryItemRepository.GetById(id);
+            if (categoryItem == null)
             {
-                baseResponse.Description = "CategoryNotFound";
+                baseResponse.Description = "CategoryItemNotFound";
                 baseResponse.StatusCode = StatusCode.NotFound;
 
                 return baseResponse;
             }
             else
             {
-                await _categoryRepository.Delete(category);
+                await _categoryItemRepository.Delete(categoryItem);
                 return baseResponse;
             }
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
             return new BaseResponse<bool>()
             {
-                Description = $"[DeleteCategory] : {ex.Message}",
+                Description = $"[DeleteCategoryItem] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
     }
 
-    public async Task<IBaseResponse<IEnumerable<CategoryViewModelDTO>>> GetAll()
+    public async Task<IBaseResponse<IEnumerable<CategoryItemViewModelDTO>>> GetAll()
     {
-        var baseResponse = new BaseResponse<IEnumerable<CategoryViewModelDTO>>();
+        var baseResponse = new BaseResponse<IEnumerable<CategoryItemViewModelDTO>>();
         try
         {
-            var category =  await _categoryRepository.GetAll();
-            if(category.Count == null)
+            var categoryItem = await _categoryItemRepository.GetAll();
+            if (categoryItem.Count == null)
             {
                 baseResponse.Description = "Elements not found";
                 baseResponse.StatusCode = StatusCode.NotFound;
@@ -80,7 +81,7 @@ public class CategoryService : ICategoryService
             }
             else
             {
-                var result = _mapper.Map<IEnumerable<CategoryViewModelDTO>>(category);
+                var result = _mapper.Map<IEnumerable<CategoryItemViewModelDTO>>(categoryItem);
                 baseResponse.Data = result;
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
@@ -89,30 +90,29 @@ public class CategoryService : ICategoryService
         }
         catch (Exception ex)
         {
-            return new BaseResponse<IEnumerable<CategoryViewModelDTO>>()
+            return new BaseResponse<IEnumerable<CategoryItemViewModelDTO>>()
             {
                 Description = $"[GetAll] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
-
     }
 
-    public async Task<IBaseResponse<CategoryViewModelDTO>> GetByDescription(string description)
+    public async Task<IBaseResponse<CategoryItemViewModelDTO>> GetByDescription(string description)
     {
-        var baseResponse = new BaseResponse<CategoryViewModelDTO>();
+        var baseResponse = new BaseResponse<CategoryItemViewModelDTO>();
         try
         {
-            var category = await _categoryRepository.GetByDescription(description);
-            if(category == null)
+            var categoryItem = await _categoryItemRepository.GetByDescription(description);
+            if (categoryItem == null)
             {
-                baseResponse.Description = "CategoryNotFound";
+                baseResponse.Description = "CategoryItemNotFound";
                 baseResponse.StatusCode = StatusCode.NotFound;
                 return baseResponse;
             }
             else
             {
-                var result = _mapper.Map<CategoryViewModelDTO>(category);
+                var result = _mapper.Map<CategoryItemViewModelDTO>(categoryItem);
                 baseResponse.Data = result;
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
@@ -120,7 +120,7 @@ public class CategoryService : ICategoryService
         }
         catch (Exception ex)
         {
-            return new BaseResponse<CategoryViewModelDTO>()
+            return new BaseResponse<CategoryItemViewModelDTO>()
             {
                 Description = $"[GetByDescription] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -128,29 +128,29 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<IBaseResponse<CategoryViewModelDTO>> GetById(int id)
+    public async Task<IBaseResponse<CategoryItemViewModelDTO>> GetById(int id)
     {
-        var baseResponse = new BaseResponse<CategoryViewModelDTO>();
+        var baseResponse = new BaseResponse<CategoryItemViewModelDTO>();
         try
         {
-            var category = await _categoryRepository.GetById(id);
-            if(category == null)
+            var categoryItem = await _categoryItemRepository.GetById(id);
+            if (categoryItem == null)
             {
-                baseResponse.Description = "CategoryNotFound";
+                baseResponse.Description = "CategoryItemNotFound";
                 baseResponse.StatusCode = StatusCode.NotFound;
                 return baseResponse;
             }
             else
             {
-                var result = _mapper.Map<CategoryViewModelDTO>(category);
+                var result = _mapper.Map<CategoryItemViewModelDTO>(categoryItem);
                 baseResponse.Data = result;
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            return new BaseResponse<CategoryViewModelDTO>()
+            return new BaseResponse<CategoryItemViewModelDTO>()
             {
                 Description = $"[GetById] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -158,29 +158,29 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<IBaseResponse<CategoryViewModelDTO>> GetByTitle(string title)
+    public async Task<IBaseResponse<CategoryItemViewModelDTO>> GetByTitle(string title)
     {
-        var baseResponse = new BaseResponse<CategoryViewModelDTO>();
+        var baseResponse = new BaseResponse<CategoryItemViewModelDTO>();
         try
         {
-            var category = await _categoryRepository.GetByTitle(title);
-            if( category == null)
+            var categoryItem = await _categoryItemRepository.GetByTitle(title);
+            if (categoryItem == null)
             {
-                baseResponse.Description = "CategoryNotFound";
+                baseResponse.Description = "CategoryItemNotFound";
                 baseResponse.StatusCode = StatusCode.NotFound;
                 return baseResponse;
             }
             else
             {
-                var result = _mapper.Map<CategoryViewModelDTO>(category);
+                var result = _mapper.Map<CategoryItemViewModelDTO>(categoryItem);
                 baseResponse.Data = result;
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            return new BaseResponse<CategoryViewModelDTO>()
+            return new BaseResponse<CategoryItemViewModelDTO>()
             {
                 Description = $"[GetByTitle] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -188,14 +188,14 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<IBaseResponse<CategoryDTO>> Update(int id, CategoryViewModelDTO entity)
+    public async Task<IBaseResponse<CategoryItemDTO>> Update(int id, CategoryItemViewModelDTO entity)
     {
-        var baseResponse = new BaseResponse<CategoryDTO>();
+        var baseResponse = new BaseResponse<CategoryItemDTO>();
         try
         {
-            var item = _mapper.Map<Category>(entity);
-            var category = await _categoryRepository.GetById(id);
-            if(category == null || item == null)
+            var item = _mapper.Map<CategoryItem>(entity);
+            var categoryItem = await _categoryItemRepository.GetById(id);
+            if (categoryItem == null || item == null)
             {
                 baseResponse.Description = "CategoryNotFound";
                 baseResponse.StatusCode = StatusCode.NotFound;
@@ -205,14 +205,14 @@ public class CategoryService : ICategoryService
             else
             {
                 item.Id = id;
-                await _categoryRepository.Update(item);
+                await _categoryItemRepository.Update(item);
             }
         }
         catch (Exception ex)
         {
-            return new BaseResponse<CategoryDTO>()
+            return new BaseResponse<CategoryItemDTO>()
             {
-                Description = $"[ChangeCategory] : {ex.Message}",
+                Description = $"[ChangeCategoryItem] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
