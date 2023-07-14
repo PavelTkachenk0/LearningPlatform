@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatform.DAL.Repositories;
 
-public class MediaTypeRepository : IBaseRepository<MediaType>
+public class MediaTypeRepository : IMediaTypeRepository
 {
     private readonly ApplicationDbContext _dbContext;
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatform.DAL.Repositories;
 
-public class ContentRepository : IBaseRepository<Content>
+public class ContentRepository : IContentRepository
 {
     private readonly ApplicationDbContext _dbContext;
 

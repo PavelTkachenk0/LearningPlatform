@@ -1,5 +1,12 @@
-﻿namespace LearningPlatform.Service.Models;
+﻿using LearningPlatform.DAL.Models;
+using System.ComponentModel.DataAnnotations;
 
-public class ContentViewModelDTO
+namespace LearningPlatform.Service.Models;
+
+public class ContentViewModelDTO : BaseId
 {
+    [Required]
+    [StringLength(200, MinimumLength = 3)]
+    public string Title { get; set; }
+    public string VideoLink { get; set; }
 }

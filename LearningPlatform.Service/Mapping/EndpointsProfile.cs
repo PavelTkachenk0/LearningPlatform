@@ -43,5 +43,17 @@ public class EndpointsProfile : Profile
             .ForMember(dest => dest.CategoryId, opt => opt.Ignore())
             .ForMember(dest => dest.MediaTypeId, opt => opt.Ignore());
 
+        CreateMap<Content, ContentViewModelDTO>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.VideoLink, opt => opt.MapFrom(src => src.VideoLink))
+            .ReverseMap()
+            .ForMember(dest => dest.CatItemId, opt => opt.Ignore())
+            .ForMember(dest => dest.CategoryItem, opt => opt.Ignore());
+
+        CreateMap<MediaType, MediaTypeViewModelDTO>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImagePath))
+            .ReverseMap()
+            .ForMember(dest => dest.CategoryItems, opt => opt.Ignore());
     }
 }
