@@ -1,12 +1,75 @@
-﻿using System;
+﻿using LearningPlatform.DAL.Interfaces;
+using LearningPlatform.DAL.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LearningPlatform.DAL.Repositories
+namespace LearningPlatform.DAL.Repositories;
+
+public class CategoryItemRepository : ICategoryItemRepository
 {
-    internal class CategoryItemRepository
+    private readonly ApplicationDbContext _dbContext;
+
+    public CategoryItemRepository(ApplicationDbContext dbContext)
     {
+        _dbContext = dbContext;
+    }
+    public async Task<bool> Create(CategoryItem entity)
+    {
+        try
+        {
+            await _dbContext.CategoryItem.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> Delete(CategoryItem entity)
+    {
+        try
+        {
+            _dbContext.CategoryItem.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch 
+        {
+            return false;
+        }
+    }
+
+    public async Task<List<CategoryItem>> GetAll()
+    {
+        return await _dbContext.CategoryItem.ToListAsync();
+    }
+
+    public async Task<CategoryItem> GetByDescription(string description)
+    {
+        return await _dbContext.CategoryItem.FirstOrDefaultAsync(x => x.Description == description);
+    }
+
+    public async Task<CategoryItem> GetById(int id)
+    {
+        return await _dbContext.CategoryItem.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<CategoryItem> GetByTitle(string title)
+    {
+        return await _dbContext.CategoryItem.FirstOrDefaultAsync(x => x.Title == title);
+    }
+
+    public async Task<CategoryItem> Update(CategoryItem entity)
+    {
+        _dbContext.CategoryItem.Update(entity);
+        await _dbContext.SaveChangesAsync();
+
+        return entity;
     }
 }

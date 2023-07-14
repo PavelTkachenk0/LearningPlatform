@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LearningPlatform.DAL.Models;
 
-public class Category : Base
+public class Category : BaseId
 {
     [Required]
     [StringLength(200, MinimumLength = 3)]

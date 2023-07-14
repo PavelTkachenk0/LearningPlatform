@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LearningPlatform.DAL.Interfaces;
 
-internal interface ICategoryItemRepository : IBaseRepository<T>
+public interface ICategoryItemRepository : IBaseRepository<CategoryItem>
 {
-    Task<> GetByDescription (string description);
+    Task<CategoryItem> GetByDescription (string description);
 }

@@ -1,60 +1,57 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LearningPlatform.Service.Interfaces;
+using LearningPlatform.Service.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearningPlatform.Controllers;
 
-[Route("[controller]")]
-[ApiController]
-
+[Route("api/[controller]")]
 public class CategoryController : Controller
 {
-    // GET: CategoryController/Create
-
-    [HttpPost]
-    public ActionResult Create()
+    private readonly ICategoryService _categoryService;
+    
+    public CategoryController(ICategoryService categoryService)
     {
-        return View();
+        _categoryService = categoryService;
     }
 
-    // POST: CategoryController/Create
-    [HttpGet]
-    public ActionResult Create(IFormCollection collection)
+    [HttpPost("CreateCategory")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateCategory([FromBody]CategoryViewModelDTO categoryViewModel)
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
+        var response = await _categoryService.Create(categoryViewModel);
+        return Ok();
     }
 
-    // POST: CategoryController/Edit/5
-    [HttpPost]
-    public ActionResult Edit(int id, IFormCollection collection)
+    [HttpDelete("DeleteCategory")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteCategory(int id)
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
+        var response = await _categoryService.Delete(id);
+        return Ok();
     }
 
-    // POST: CategoryController/Delete/5
-    [HttpPost]
-    public ActionResult Delete(int id, IFormCollection collection)
+    [HttpGet("GetAllCategories")]
+    //[Autorize(Roles = "Admin")]
+    public async Task<IEnumerable<CategoryViewModelDTO>> GetAllCategories()
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
+        var response = await _categoryService.GetAll();
+        return response.Data;
+    }
+
+    [HttpGet("GetByDescription")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<CategoryViewModelDTO> GetByDescription(string description)
+    {
+        var response = await _categoryService.GetByDescription(description);
+        return response.Data;
+    }
+
+    [HttpGet("GetById")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<CategoryViewModelDTO> GetById(int Id)
+    {
+        var response = await _categoryService.GetById(Id);
+        return response.Data;
     }
 }

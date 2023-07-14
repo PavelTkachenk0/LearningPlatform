@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace LearningPlatform.Service.Interfaces;
 
-namespace LearningPlatform.Service.Interfaces
+public interface IBaseService<T, M> 
 {
-    internal interface IBaseService
-    {
-    }
+    Task<IBaseResponse<IEnumerable<M>>> GetAll();
+    Task<IBaseResponse<M>> GetById(int id);
+    Task<IBaseResponse<M>> GetByTitle();
+    Task<IBaseResponse<bool>> Delete(int id);
+    Task<IBaseResponse<T>> Create(M entity);
+    Task<IBaseResponse<T>> Update(int id, M entity);
+
 }

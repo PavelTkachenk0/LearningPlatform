@@ -1,13 +1,9 @@
 ﻿using LearningPlatform.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LearningPlatform.Service.Models;
 
-namespace LearningPlatform.Service.Interfaces
+namespace LearningPlatform.Service.Interfaces;
+
+public interface ICategoryService : IBaseService<CategoryDTO, CategoryViewModelDTO>
 {
-    internal interface ICategoryService : IBaseService<Category,>
-    {
-    }
+    Task<IBaseResponse<CategoryViewModelDTO>> GetByDescription(string description);
 }

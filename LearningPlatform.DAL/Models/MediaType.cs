@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LearningPlatform.DAL.Models;
 
-public class MediaType : Base
+public class MediaType : BaseId
 {
     [Required]
     [StringLength(200, MinimumLength = 3)]

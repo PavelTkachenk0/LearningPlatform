@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LearningPlatform.DAL.Models;
 
-public class CategoryItem : Base
+public class CategoryItem : BaseId
 {
     [Required]
     [StringLength(200, MinimumLength = 3)]
@@ -19,5 +19,6 @@ public class CategoryItem : Base
     //[NotMapped]
     //public virtual ICollection<SelectListItem> MediaTypes { get; set; }
     public int CategoryId { get; set; }
+    [Required]
     public int MediaTypeId { get; set; }
 }

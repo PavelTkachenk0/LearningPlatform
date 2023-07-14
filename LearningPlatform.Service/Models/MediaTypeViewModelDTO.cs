@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LearningPlatform.Service.Models
 {
-    internal class MidiaType
+    internal class MediaTypeViewModelDTO
     {
     }
 }

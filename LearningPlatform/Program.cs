@@ -1,5 +1,10 @@
 using LearningPlatform.DAL;
+using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
+using LearningPlatform.DAL.Repositories;
+using LearningPlatform.Service.Interfaces;
+using LearningPlatform.Service.Mapping;
+using LearningPlatform.Service.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -17,10 +22,17 @@ builder.Services.AddDefaultIdentity<ApplicationUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddAutoMapper(typeof(EndpointsProfile));
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
+
+builder.Services.AddOptions();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
@@ -39,10 +51,7 @@ app.UseRouting();
 
 app.UseSwagger();
 
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample API");
-});
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 

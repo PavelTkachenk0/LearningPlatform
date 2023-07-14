@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LearningPlatform.DAL.Models;
 
-public class Base
+public class BaseId
 {
     public int Id { get; set; }
 }

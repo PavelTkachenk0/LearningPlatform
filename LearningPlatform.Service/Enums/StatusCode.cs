@@ -4,9 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LearningPlatform.Service.Enums
+namespace LearningPlatform.Service.Enums;
+
+public enum StatusCode
 {
-    internal class StatusCode
-    {
-    }
+    OK = 200,
+
+    NotFound = 404,
+
+    InternalServerError = 500
+
 }
