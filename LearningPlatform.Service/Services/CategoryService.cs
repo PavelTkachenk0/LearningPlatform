@@ -72,7 +72,7 @@ public class CategoryService : ICategoryService
         try
         {
             var category =  await _categoryRepository.GetAll();
-            if(category.Count == null)
+            if(category.Count == 0)
             {
                 baseResponse.Description = "Elements not found";
                 baseResponse.StatusCode = StatusCode.NotFound;
