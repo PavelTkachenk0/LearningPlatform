@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LearningPlatform.Service.Models;
 
-public class CategoryItemViewModelDTO : BaseId
+public class CategoryItemDTO : BaseId
 {
     [Required]
     [StringLength(200, MinimumLength = 3)]

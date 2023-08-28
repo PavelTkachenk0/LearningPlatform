@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LearningPlatform.DAL;
 using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
 using LearningPlatform.DAL.Repositories;
@@ -18,11 +19,13 @@ public class MediaTypeService : IMediaTypeService
 {
     private readonly IMediaTypeRepository _mediaTypeRepository;
     private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _applicationDbContext;
 
-    public MediaTypeService(IMediaTypeRepository mediaTypeRepository, IMapper mapper)
+    public MediaTypeService(IMediaTypeRepository mediaTypeRepository, IMapper mapper, ApplicationDbContext applicationDbContext)
     {
         _mediaTypeRepository = mediaTypeRepository;
         _mapper = mapper;
+        _applicationDbContext = applicationDbContext;
     }
 
     public async Task<IBaseResponse<MediaTypeDTO>> Create(MediaTypeViewModelDTO entity)
@@ -164,13 +167,14 @@ public class MediaTypeService : IMediaTypeService
         }
     }
 
-    public async Task<IBaseResponse<MediaTypeDTO>> Update(int id, MediaTypeViewModelDTO entity)
+    public async Task<IBaseResponse<MediaTypeDTO>> Update(MediaTypeViewModelDTO entity)
     {
         var baseResponse = new BaseResponse<MediaTypeDTO>();
         try
         {
             var item = _mapper.Map<MediaType>(entity);
-            var mediaType = await _mediaTypeRepository.GetById(id);
+            var entityId = entity.Id;
+            var mediaType = await _mediaTypeRepository.GetById(entityId);
             if (mediaType == null || item == null)
             {
                 baseResponse.Description = "MediaTypeNotFound";
@@ -180,8 +184,10 @@ public class MediaTypeService : IMediaTypeService
             }
             else
             {
-                item.Id = id;
-                await _mediaTypeRepository.Update(item);
+                _applicationDbContext.MediaType.Update(item);
+                await _applicationDbContext.SaveChangesAsync();
+                return baseResponse;
+                //await _mediaTypeRepository.Update(item);
             }
         }
         catch (Exception ex)
@@ -192,6 +198,5 @@ public class MediaTypeService : IMediaTypeService
                 StatusCode = StatusCode.InternalServerError
             };
         }
-        return baseResponse;
     }
 }

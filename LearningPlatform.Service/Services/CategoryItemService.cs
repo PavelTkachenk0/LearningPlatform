@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LearningPlatform.DAL;
 using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
 using LearningPlatform.DAL.Repositories;
@@ -13,11 +14,13 @@ public class CategoryItemService : ICategoryItemService
 {
     private readonly ICategoryItemRepository _categoryItemRepository;
     private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _context;
 
-    public CategoryItemService(IMapper mapper, ICategoryItemRepository categoryItemRepository)
+    public CategoryItemService(IMapper mapper, ICategoryItemRepository categoryItemRepository, ApplicationDbContext context)
     {
         _mapper = mapper;
         _categoryItemRepository = categoryItemRepository;
+        _context = context;
     }
     public async Task<IBaseResponse<CategoryItemDTO>> Create(CategoryItemViewModelDTO entity)
     {
@@ -73,7 +76,7 @@ public class CategoryItemService : ICategoryItemService
         try
         {
             var categoryItem = await _categoryItemRepository.GetAll();
-            if (categoryItem.Count == null)
+            if (categoryItem.Count == 0)
             {
                 baseResponse.Description = "Elements not found";
                 baseResponse.StatusCode = StatusCode.NotFound;
@@ -188,13 +191,14 @@ public class CategoryItemService : ICategoryItemService
         }
     }
 
-    public async Task<IBaseResponse<CategoryItemDTO>> Update(int id, CategoryItemViewModelDTO entity)
+    public async Task<IBaseResponse<CategoryItemDTO>> Update(CategoryItemViewModelDTO entity)
     {
         var baseResponse = new BaseResponse<CategoryItemDTO>();
         try
         {
             var item = _mapper.Map<CategoryItem>(entity);
-            var categoryItem = await _categoryItemRepository.GetById(id);
+            var entityId = entity.Id;
+            var categoryItem = await _categoryItemRepository.GetById(entityId);
             if (categoryItem == null || item == null)
             {
                 baseResponse.Description = "CategoryNotFound";
@@ -204,8 +208,10 @@ public class CategoryItemService : ICategoryItemService
             }
             else
             {
-                item.Id = id;
-                await _categoryItemRepository.Update(item);
+                _context.CategoryItem.Update(item);
+                await _context.SaveChangesAsync();
+                return baseResponse;
+                //await _categoryItemRepository.Update(item);
             }
         }
         catch (Exception ex)
@@ -216,6 +222,5 @@ public class CategoryItemService : ICategoryItemService
                 StatusCode = StatusCode.InternalServerError
             };
         }
-        return baseResponse;
     }
 }

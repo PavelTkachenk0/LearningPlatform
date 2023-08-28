@@ -169,7 +169,7 @@ namespace LearningPlatform.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryItemId")
+                    b.Property<int>("CatItemId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
@@ -183,7 +183,7 @@ namespace LearningPlatform.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryItemId");
+                    b.HasIndex("CatItemId");
 
                     b.ToTable("Content");
                 });
@@ -388,8 +388,8 @@ namespace LearningPlatform.DAL.Migrations
             modelBuilder.Entity("LearningPlatform.DAL.Models.Content", b =>
                 {
                     b.HasOne("LearningPlatform.DAL.Models.CategoryItem", "CategoryItem")
-                        .WithMany()
-                        .HasForeignKey("CategoryItemId")
+                        .WithMany("content")
+                        .HasForeignKey("CatItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -472,6 +472,11 @@ namespace LearningPlatform.DAL.Migrations
                     b.Navigation("CategoryItems");
 
                     b.Navigation("UserCategories");
+                });
+
+            modelBuilder.Entity("LearningPlatform.DAL.Models.CategoryItem", b =>
+                {
+                    b.Navigation("content");
                 });
 
             modelBuilder.Entity("LearningPlatform.DAL.Models.MediaType", b =>

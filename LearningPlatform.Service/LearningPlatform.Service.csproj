@@ -7,6 +7,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enums\**" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="Mapping\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Responce\**" />
+    <Compile Remove="Security\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Mapping\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Responce\**" />
+    <EmbeddedResource Remove="Security\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Enums\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="Mapping\**" />
+    <None Remove="Models\**" />
+    <None Remove="Responce\**" />
+    <None Remove="Security\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="StatusCode.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
   </ItemGroup>
 

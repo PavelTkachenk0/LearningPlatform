@@ -58,8 +58,15 @@ public class MediaTypeRepository : IMediaTypeRepository
 
     public async Task<bool> Update(MediaType entity)
     {
-        _dbContext.MediaType.Update(entity);
-        await _dbContext.SaveChangesAsync();
-        return true;
+        try
+        {
+            _dbContext.MediaType.Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch 
+        { 
+            return false; 
+        }
     }
 }

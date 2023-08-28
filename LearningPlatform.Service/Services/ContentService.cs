@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LearningPlatform.DAL;
 using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
 using LearningPlatform.DAL.Repositories;
@@ -13,11 +14,13 @@ public class ContentService : IContentService
 {
     private readonly IContentRepository _contentRepository;
     private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _applicationDbContext;
 
-    public ContentService(IContentRepository contentRepository, IMapper mapper)
+    public ContentService(IContentRepository contentRepository, IMapper mapper, ApplicationDbContext applicationDbContext)
     {
         _contentRepository = contentRepository;
         _mapper = mapper;
+        _applicationDbContext = applicationDbContext;
     }
 
     public async Task<IBaseResponse<ContentDTO>> Create(ContentViewModelDTO entity)
@@ -159,13 +162,14 @@ public class ContentService : IContentService
         }
     }
 
-    public async Task<IBaseResponse<ContentDTO>> Update(int id, ContentViewModelDTO entity)
+    public async Task<IBaseResponse<ContentDTO>> Update(ContentViewModelDTO entity)
     {
         var baseResponse = new BaseResponse<ContentDTO>();
         try
         {
             var item = _mapper.Map<Content>(entity);
-            var content = await _contentRepository.GetById(id);
+            var entityId = entity.Id;
+            var content = await _contentRepository.GetById(entityId);
             if (content == null || item == null)
             {
                 baseResponse.Description = "ContentNotFound";
@@ -175,8 +179,10 @@ public class ContentService : IContentService
             }
             else
             {
-                item.Id = id;
-                await _contentRepository.Update(item);
+                _applicationDbContext.Content.Update(item);
+                await _applicationDbContext.SaveChangesAsync();
+                return baseResponse;
+               // await _contentRepository.Update(item);
             }
         }
         catch (Exception ex)
@@ -187,6 +193,5 @@ public class ContentService : IContentService
                 StatusCode = StatusCode.InternalServerError
             };
         }
-        return baseResponse;
     }
 }

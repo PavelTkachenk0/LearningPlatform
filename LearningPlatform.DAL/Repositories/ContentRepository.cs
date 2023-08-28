@@ -57,8 +57,15 @@ public class ContentRepository : IContentRepository
 
     public async Task<bool> Update(Content entity)
     {
-        _dbContext.Content.Update(entity);
-        await _dbContext.SaveChangesAsync();
-        return true;
+        try
+        {
+            _dbContext.Content.Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

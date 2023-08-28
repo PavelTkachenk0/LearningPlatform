@@ -1,7 +1,12 @@
-﻿using LearningPlatform.Service.Interfaces;
-using LearningPlatform.Service.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using LearningPlatform.DAL;
+using LearningPlatform.DAL.Interfaces;
+using LearningPlatform.DAL.Models;
+using LearningPlatform.Interfaces;
+using LearningPlatform.Models;
+using LearningPlatform.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatform.Controllers;
 
@@ -9,31 +14,35 @@ namespace LearningPlatform.Controllers;
 public class CategoryController : Controller
 {
     private readonly ICategoryService _categoryService;
+    private readonly ApplicationDbContext _applicationDbContext;
+    private readonly IMapper _mapper;
     
-    public CategoryController(ICategoryService categoryService)
+    public CategoryController(ICategoryService categoryService, ApplicationDbContext applicationDbContext, IMapper mapper)
     {
         _categoryService = categoryService;
+        _applicationDbContext = applicationDbContext;
+        _mapper = mapper;
     }
 
-    [HttpPost("CreateCategory")]
+    [HttpPost("Create")]
     //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateCategory([FromBody]CategoryViewModelDTO categoryViewModel)
+    public async Task<IActionResult> Create([FromBody]CategoryDTO categoryDTO)
     {
-        var response = await _categoryService.Create(categoryViewModel);
+        var response = await _categoryService.Create(categoryDTO);
         return Ok();
     }
 
-    [HttpDelete("DeleteCategory")]
+    [HttpDelete("Delete")]
     //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteCategory(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var response = await _categoryService.Delete(id);
         return Ok();
     }
 
-    [HttpGet("GetAllCategories")]
+    [HttpGet("GetAll")]
     //[Autorize(Roles = "Admin")]
-    public async Task<IEnumerable<CategoryViewModelDTO>> GetAllCategories()
+    public async Task<IEnumerable<CategoryViewModelDTO>> GetAll()
     {
         var response = await _categoryService.GetAll();
         return response.Data;
@@ -63,11 +72,27 @@ public class CategoryController : Controller
         return response.Data;
     }
 
-    [HttpPut("ChangeCategory")]
+    [HttpPut("Change")]
     //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> ChangeCategory(int id, [FromBody] CategoryViewModelDTO categoryViewModelDTO)
+    public async Task<IActionResult> Change([FromBody] CategoryDTO categoryDTO)
     {
-        var response = await _categoryService.Update(id, categoryViewModelDTO);
-        return Ok();
+        //var response = await _categoryService.Update(categoryViewModelDTO);
+        try
+        {
+            var item = _mapper.Map<Category>(categoryDTO);
+            if (item == null)
+            {
+                return StatusCode(500);
+            }
+            _applicationDbContext.Category.Update(item);
+            await _applicationDbContext.SaveChangesAsync();
+            return StatusCode(200);
+
+
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500);
+        }
     }
 }

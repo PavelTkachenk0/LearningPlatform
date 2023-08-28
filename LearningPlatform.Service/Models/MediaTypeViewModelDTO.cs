@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LearningPlatform.DAL.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace LearningPlatform.Service.Models;
 
-public class MediaTypeViewModelDTO
+public class MediaTypeViewModelDTO : BaseId
 {
     [Required]
     [StringLength(200, MinimumLength = 3)]

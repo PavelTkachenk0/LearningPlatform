@@ -11,7 +11,6 @@ public class Content : BaseId
     public string VideoLink { get; set; }
     //[NotMapped]
     //public int CategoryId { get; set; }
-    [NotMapped]
     public int CatItemId { get; set; }
 
     public CategoryItem CategoryItem { get; set; }

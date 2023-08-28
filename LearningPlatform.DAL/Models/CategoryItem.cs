@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LearningPlatform.DAL.Models;
 
@@ -12,6 +13,7 @@ public class CategoryItem : BaseId
     //[NotMapped]
     //public virtual ICollection<SelectListItem> MediaTypes { get; set; }
     public int CategoryId { get; set; }
-    [Required]
     public int MediaTypeId { get; set; }
+    [ForeignKey("CatItemId")]
+    public virtual ICollection<Content> content { get; set; }
 }

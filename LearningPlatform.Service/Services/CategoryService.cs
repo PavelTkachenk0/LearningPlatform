@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LearningPlatform.DAL;
 using LearningPlatform.DAL.Interfaces;
 using LearningPlatform.DAL.Models;
 using LearningPlatform.Service.Enums;
@@ -12,11 +13,13 @@ public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _applicationDbContext;
 
-    public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+    public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, ApplicationDbContext applicationDbContext)
     {
         _categoryRepository = categoryRepository;
         _mapper = mapper;
+        _applicationDbContext = applicationDbContext;
     }
     public async Task<IBaseResponse<CategoryDTO>> Create(CategoryViewModelDTO entity)
     {
@@ -188,13 +191,14 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<IBaseResponse<CategoryDTO>> Update(int id, CategoryViewModelDTO entity)
+    public async Task<IBaseResponse<CategoryDTO>> Update(CategoryViewModelDTO entity)
     {
         var baseResponse = new BaseResponse<CategoryDTO>();
         try
         {
             var item = _mapper.Map<Category>(entity);
-            var category = await _categoryRepository.GetById(id);
+            var entityId = entity.Id;
+            var category = await _categoryRepository.GetById(entityId);
             if(category == null || item == null)
             {
                 baseResponse.Description = "CategoryNotFound";
@@ -204,8 +208,9 @@ public class CategoryService : ICategoryService
             }
             else
             {
-                item.Id = id;
-                await _categoryRepository.Update(item);
+                _applicationDbContext.Category.Update(item);
+                await _applicationDbContext.SaveChangesAsync();
+               // await _categoryRepository.Update(item);
             }
         }
         catch (Exception ex)

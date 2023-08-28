@@ -62,9 +62,15 @@ public class CategoryItemRepository : ICategoryItemRepository
 
     public async Task<bool> Update(CategoryItem entity)
     {
-        _dbContext.CategoryItem.Update(entity);
-        await _dbContext.SaveChangesAsync();
-
-        return true;
+        try
+        {
+            _dbContext.CategoryItem.Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch
+        { 
+            return false; 
+        }
     }
 }
